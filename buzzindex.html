@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Socket.IO chat</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font: 13px Helvetica, Arial;
+			text-align: center;
+			width: 100%;
+		}
+
+		#button {
+			font-size: 15px;
+			display: inline-block;
+			width: 175px;
+			background-color: aqua;
+			text-align: center;
+			padding: 20px;
+			font-weight: bold;
+			color: #ffffff;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+			cursor: pointer;
+		}
+
+		#button3 {
+			font-size: 15px;
+			display: inline-block;
+			width: 175px;
+			background-color: red;
+			text-align: center;
+			padding: 20px;
+			font-weight: bold;
+			color: #ffffff;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+			cursor: pointer;
+		}
+
+		#countdownbox {
+			display: block;
+			margin: 0 auto;
+			font-size: 70px;
+		}
+
+		#youBox {
+			display: block;
+			margin: 0 auto;
+		}
+
+		#m {
+			display: inline-block;
+			font-size: 30px;
+			margin: 20px;
+			margin-bottom: 5px;
+			padding: 5px;
+		}
+
+		#stop {
+			display: inline-block;
+			width: 300px;
+			height: 75px;
+			background-color: red;
+			text-align: center;
+			color: white;
+			margin: 20px;
+		}
+
+		#userid {
+			color: white;
+			display: inline-block;
+			padding: 15px;
+			background-color: #d41cdb;
+			font-size: 30px;
+		}
+
+		#pingBox {
+			display: block;
+			margin: 0 auto;
+		}
+
+		#goBox {
+			display: none;
+			width: 100%;
+			height: 50px;
+			background-color: #13ea13
+		}
+
+		#inSeconds {
+			display: block;
+			font-size: 10px;
+			margin: 0 auto;
+			margin-bottom: 10px;
+			font-style: italic;
+			color: #4b4b4b
+		}
+
+		#connecteduserbox {
+			border: #000000 solid 1px;
+			width: 300px;
+			display: block;
+			margin: 0 auto;
+		}
+	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+	<div id="countdownbox"></div>
+	<div id="goBox"></div>
+
+	<input id="m" autocomplete="off" placeholder="Enter Count Down Value" />
+	<div id="inSeconds">*Time in Seconds*</div>
+	<div id="button">Check Your Ping
+		<div id="pingBox"></div>
+	</div> <br>
+
+	<div id="button3">Start Count Down</div>
+	<br><br>
+	<div id="youBox"></div><br><br>
+
+	<div id="connecteduserbox"></div>
+
+
+	<script src="/socket.io/socket.io.js"></script>
+
+	<script>
+		var connectedUsers;
+		var socket = io();
+		var countDownInProgress = false;
+
+		$('#button3').click(function() {
+			socket.emit('startCountDown', $('#m').val());
+		});
+
+		$('#button').click(function() {
+			for (var y = 0; y < 10; y++) {
+				socket.emit('startRTT', "0");
+			}
+		});
+
+		socket.on('connectedUsers', function(msg) {
+			console.log(msg.users);
+			connectedUsers = msg.users;
+			$("#connecteduserbox").empty();
+			for (var x = 0; x < connectedUsers.length; x++) {
+				$("#connecteduserbox").append("<div style='display:block' data-socketid='" + connectedUsers[x] + "'>" + connectedUsers[x] + "</div>");
+			}
+
+		});
+
+		socket.on('countdownclient', function(msg) {
+			$("#goBox").css("display", "none");
+			if (!countDownInProgress) {
+				countDownInProgress = true;
+				var counter = msg;
+				var id;
+
+				$("#countdownbox").empty();
+				$("#countdownbox").append("<div style='display:block'>" + counter + "</div>");
+
+				id = setInterval(function() {
+					counter--;
+					if (counter <= 0) {
+						$("#goBox").css("display", "block");
+						$("#countdownbox").empty();
+						$("#countdownbox").append("<div style='display:block'>" + 0 + "</div>");
+						clearInterval(id);
+						countDownInProgress = false;
+					} else {
+						$("#countdownbox").empty();
+						$("#countdownbox").append("<div style='display:block'>" + counter + "</div>");
+
+					}
+				}, 1000);
+			}
+
+		});
+
+
+
+		socket.on('pingDelay', function(msg) {
+			$("#pingBox").empty();
+			$("#pingBox").append("<div style='display:block'>" + msg + " ms</div>");
+
+		});
+
+		socket.on('you', function(msg) {
+			$("#youBox").empty();
+			$("#youBox").append("<div style='display:block;'>You : <div style=' font-weight: bold; display: inline-block'>" + msg + "</div></div>");
+
+		});
+
+		socket.on('latencytest2', function(msg) {
+			// END server to client roundabout
+			var at = new Date();
+			var mss = at.getTime();
+
+			socket.emit('latencytest2', {
+				client: mss,
+				server: msg
+			});
+
+		});
+	</script>
+</body>
+
+</html>
