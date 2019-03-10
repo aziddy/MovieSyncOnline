@@ -165,8 +165,11 @@
 				
 		$('#button').click(function() {
 			for (var y = 0; y < 10; y++) {
-				socket.emit('startRTT', "0");
+			//	socket.emit('startRTT', "0");
 			}
+			
+			$(this).text(btoa('magnet:?xt=urn:btih:f73a9012655bc2b4f33f4de98965e9fcfd1f27ab&dn=Riverdale.US.S03E14.HDTV.x264-SVA%5Bettv%5D&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969'));
+			
 		});
 		
 		
@@ -175,6 +178,16 @@
 			//socket.emit('setCurrentVideoTime', 120);
 
 		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		$('#sendCurrentLocalVideoTime').click(function() {
