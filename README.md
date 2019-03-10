@@ -1,3 +1,3 @@
 # MovieSyncOnline
 
-Software to watch video files synced online from a VPS
+Program to stream torrents to browser with sync controls, so you can watch them with friends
