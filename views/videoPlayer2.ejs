@@ -1,2 +1,347 @@
-aaaaabbb----<%=magnet%>
+<!doctype html>
+<html>
 
+<head>
+	<title>Movie Sync Online</title>
+<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font: 13px Helvetica, Arial;
+			text-align: center;
+			width: 100%;
+		}
+
+		#button {
+			font-size: 15px;
+			display: inline-block;
+			width: 175px;
+			background-color: aqua;
+			text-align: center;
+			padding: 20px;
+			font-weight: bold;
+			color: #ffffff;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+			cursor: pointer;
+		}
+
+		#button3 {
+			font-size: 15px;
+			display: inline-block;
+			width: 175px;
+			background-color: red;
+			text-align: center;
+			padding: 20px;
+			font-weight: bold;
+			color: #ffffff;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+			cursor: pointer;
+		}
+
+		#countdownbox {
+			display: block;
+			margin: 0 auto;
+			font-size: 70px;
+		}
+
+		#youBox {
+			display: block;
+			margin: 0 auto;
+		}
+
+		#m {
+			display: inline-block;
+			font-size: 30px;
+			margin: 20px;
+			margin-bottom: 5px;
+			padding: 5px;
+		}
+
+		#stop {
+			display: inline-block;
+			width: 300px;
+			height: 75px;
+			background-color: red;
+			text-align: center;
+			color: white;
+			margin: 20px;
+		}
+
+		#userid {
+			color: white;
+			display: inline-block;
+			padding: 15px;
+			background-color: #d41cdb;
+			font-size: 30px;
+		}
+
+		#pingBox {
+			display: block;
+			margin: 0 auto;
+		}
+
+		#goBox {
+			display: none;
+			width: 100%;
+			height: 50px;
+			background-color: #13ea13
+		}
+
+		#inSeconds {
+			display: block;
+			font-size: 10px;
+			margin: 0 auto;
+			margin-bottom: 10px;
+			font-style: italic;
+			color: #4b4b4b
+		}
+
+		#connecteduserbox {
+			border: #000000 solid 1px;
+			width: 300px;
+			display: block;
+			margin: 0 auto;
+		}
+		
+		#sendCurrentLocalVideoTime{
+			font-size: 15px;
+			display: inline-block;
+			width: 175px;
+			background-color: orange;
+			text-align: center;
+			padding: 20px;
+			font-weight: bold;
+			color: #ffffff;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			user-select: none;
+			cursor: pointer;
+		}
+	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+	<video id="videoPlayer" controls>
+		<!--<source src="http://198.50.245.94:2999/videoStream/1/big_buck_bunny_480p_surround-fix.mp4" type="video/mp4">-->
+	</video>
+	
+	<div id="button">Check Your Ping
+		<div id="pingBox"></div>
+	</div> 
+	
+	
+	<div id="buttonTime">Set to 50s</div> 
+	
+	
+	
+		<div id="youBox"></div><br><br>
+
+	<div id="connecteduserbox"></div>
+	
+	<div id="sendCurrentLocalVideoTime">SEND LOCAL PLAYER TIME TO EVERYONE ELSE</div> 
+	
+	<script>
+
+		
+		
+		
+		
+		var connectedUsers;
+		var socket = io();
+		var userSocketID;
+		
+		$(document).ready(function(){ 
+			var magnetURL = window.atob('<%=magnet%>');
+			socket.emit('updateTorrentStream', magnetURL);
+		});
+		
+				
+		
+		socket.on('connect', function() {
+			userSocketID = socket.io.engine.id;
+			console.log(userSocketID);
+			//$("#videoPlayer").children("source").attr('src', "http://198.50.245.94:2999/videoStream/big_buck_bunny_480p_surround-fix.mp4");
+			
+			//$("#videoPlayer").children("source").attr('src', "http://198.50.245.94:2999/videoStream/"+userSocketID+"/big_buck_bunny_480p_surround-fix.mp4");
+			
+			
+			//console.log($("#videoPlayer").children("source").attr('src'));
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+				
+		$('#button').click(function() {
+			for (var y = 0; y < 10; y++) {
+				socket.emit('startRTT', "0");
+			}
+			
+			//$(this).text(btoa('magnet:?xt=urn:btih:f73a9012655bc2b4f33f4de98965e9fcfd1f27ab&dn=Riverdale.US.S03E14.HDTV.x264-SVA%5Bettv%5D&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969'));
+			
+		});
+		
+		
+		$('#buttonTime').click(function() {
+			//document.getElementById('videoPlayer').currentTime = 120;
+			//socket.emit('setCurrentVideoTime', 120);
+
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		$('#sendCurrentLocalVideoTime').click(function() {
+			//document.getElementById('videoPlayer').currentTime = 120;
+			//socket.emit('setCurrentVideoTime', 120);
+			document.getElementById('videoPlayer').pause();
+			socket.emit('setCurrentVideoTime', document.getElementById('videoPlayer').currentTime);
+		});
+		
+		
+		//$( "#single" ).val();
+		
+		$("#videoPlayer").on('play', function() {
+		//Actions when video play selected
+			//alert("YEETUS");
+			socket.emit('setCurrentVideoPlay', document.getElementById('videoPlayer').currentTime);
+		});
+		
+		
+		$("#videoPlayer").on('pause', function() {
+		//Actions when video pause selected
+ 			socket.emit('setCurrentVideoPause', document.getElementById('videoPlayer').currentTime);
+		});
+		
+		
+		$("#videoPlayer").on('timeupdate', function() {
+		//Actions when video play selected
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		socket.on('torrentStreamReady', function(msg) {
+			alert("torrent ready");
+			$("#videoPlayer").html('<source src="http://198.50.245.94:2999/videoStream/'+userSocketID+'/big_buck_bunny_480p_surround-fix.mp4" type="video/mp4">');		
+		});		
+		
+		
+		
+		
+		socket.on('updateCurrentVideoTime', function(msg) {
+			document.getElementById('videoPlayer').pause();
+			document.getElementById('videoPlayer').currentTime = msg;
+			
+		});
+		
+		socket.on('updateCurrentVideoPlay', function(msg) {
+			document.getElementById('videoPlayer').play();
+		});
+		
+		socket.on('updateCurrentVideoPause', function(msg) {
+			document.getElementById('videoPlayer').pause();
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		socket.on('connectedUsers', function(msg) {
+			console.log(msg.users);
+			connectedUsers = msg.users;
+			$("#connecteduserbox").empty();
+			for (var x = 0; x < connectedUsers.length; x++) {
+				$("#connecteduserbox").append("<div style='display:block' data-socketid='" + connectedUsers[x] + "'>" + connectedUsers[x] + "</div>");
+			}
+
+		});
+		
+		
+		socket.on('you', function(msg) {
+			$("#youBox").empty();
+			$("#youBox").append("<div style='display:block;'>You : <div style=' font-weight: bold; display: inline-block'>" + msg + "</div></div>");
+
+		});
+		
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		socket.on('pingDelay', function(msg) {
+			$("#pingBox").empty();
+			$("#pingBox").append("<div style='display:block'>" + msg + " ms</div>");
+
+		});
+
+
+
+		socket.on('latencytest2', function(msg) {
+			// END server to client roundabout
+			var at = new Date();
+			var mss = at.getTime();
+
+			socket.emit('latencytest2', {
+				client: mss,
+				server: msg
+			});
+
+		});
+	</script>
+	
+	
+</body>

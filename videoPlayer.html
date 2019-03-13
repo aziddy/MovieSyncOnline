@@ -137,8 +137,8 @@
 </head>
 
 <body>
-	<video id="videoPlayer" controls>
-		<source src="http://198.50.245.94:2999/videoStream/big_buck_bunny_480p_surround-fix.mp4" type="video/mp4">
+	<video id="videoPlayer" muted controls>
+		<!--<source src="http://198.50.245.94:2999/videoStream/1/big_buck_bunny_480p_surround-fix.mp4" type="video/mp4">-->
 	</video>
 	
 	<div id="button">Check Your Ping
@@ -159,16 +159,50 @@
 	<script>
 
 		
+		
+		
+		
 		var connectedUsers;
 		var socket = io();
+		var userSocketID;
+		
+		$(document).ready(function(){ 
+			
+			socket.emit('updateTorrentStream', 'magnet:?xt=urn:btih:f73a9012655bc2b4f33f4de98965e9fcfd1f27ab&dn=Riverdale.US.S03E14.HDTV.x264-SVA%5Bettv%5D&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969');
+			
+		});
+		
+				
+		
+		socket.on('connect', function() {
+			userSocketID = socket.io.engine.id;
+			console.log(userSocketID);
+			//$("#videoPlayer").children("source").attr('src', "http://198.50.245.94:2999/videoStream/big_buck_bunny_480p_surround-fix.mp4");
+			
+			//$("#videoPlayer").children("source").attr('src', "http://198.50.245.94:2999/videoStream/"+userSocketID+"/big_buck_bunny_480p_surround-fix.mp4");
+			
+			
+			//console.log($("#videoPlayer").children("source").attr('src'));
+		});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 				
 		$('#button').click(function() {
 			for (var y = 0; y < 10; y++) {
-			//	socket.emit('startRTT', "0");
+				socket.emit('startRTT', "0");
 			}
 			
-			$(this).text(btoa('magnet:?xt=urn:btih:f73a9012655bc2b4f33f4de98965e9fcfd1f27ab&dn=Riverdale.US.S03E14.HDTV.x264-SVA%5Bettv%5D&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969'));
+			//$(this).text(btoa('magnet:?xt=urn:btih:f73a9012655bc2b4f33f4de98965e9fcfd1f27ab&dn=Riverdale.US.S03E14.HDTV.x264-SVA%5Bettv%5D&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969'));
 			
 		});
 		
@@ -193,6 +227,7 @@
 		$('#sendCurrentLocalVideoTime').click(function() {
 			//document.getElementById('videoPlayer').currentTime = 120;
 			//socket.emit('setCurrentVideoTime', 120);
+			document.getElementById('videoPlayer').pause();
 			socket.emit('setCurrentVideoTime', document.getElementById('videoPlayer').currentTime);
 		});
 		
@@ -218,8 +253,24 @@
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		socket.on('torrentStreamReady', function(msg) {
+			alert("torrent ready");
+			$("#videoPlayer").html('<source src="http://198.50.245.94:2999/videoStream/'+userSocketID+'/big_buck_bunny_480p_surround-fix.mp4" type="video/mp4">');		
+		});		
+		
+		
+		
+		
 		socket.on('updateCurrentVideoTime', function(msg) {
+			document.getElementById('videoPlayer').pause();
 			document.getElementById('videoPlayer').currentTime = msg;
+			
 		});
 		
 		socket.on('updateCurrentVideoPlay', function(msg) {
